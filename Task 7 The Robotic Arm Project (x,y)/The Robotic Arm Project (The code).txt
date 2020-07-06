@@ -1,0 +1,161 @@
+#include <Servo.h>
+
+void Forword();
+void Inverse();
+
+Servo M1;
+Servo M2;
+
+float Phi1;
+float Phi2;
+
+int L1 = 10;
+int L2 = 12;
+
+float Theta;
+
+float X;
+float Y;
+
+int Russ;
+
+void setup(){
+  
+M1.attach(13);
+M2.attach(9);
+
+Serial.begin(9600);
+
+}
+void loop() {
+
+Serial.println("For Forword Kinematic please enter 1");
+Serial.println("For Inverse Kinematic please enter 2");
+
+while(Serial.available()==0){
+  }
+Russ = Serial.parseInt();
+
+if (Russ == 1){
+  
+  Forword();
+  }
+else if (Russ == 2){
+  
+  Inverse();
+  }
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+void Forword(){
+
+  
+Serial.println("Enter The value of Phi 1 :");
+
+while(Serial.available()==0){
+  }
+  
+Phi1 = Serial.parseInt();
+
+Serial.println("Enter The value of Phi 2 :");
+
+while(Serial.available()==0){
+  }
+  
+Phi2 = Serial.parseInt();
+  
+M1.write(Phi1) ;
+M2.write(Phi2) ;
+  
+Theta = Phi1 + Phi2;
+
+//deg = rad * 57.2958 
+
+//rad = deg * 1/ 57.2958
+
+X = (L1 * cos(Phi1*0.01745))+ (L2 * cos(Theta*0.01745));
+Y = (L1 * sin(Phi1*0.01745))+ (L2 * sin(Theta*0.01745)); 
+  
+Serial.print("Phi 1 = ");
+Serial.println(Phi1);  
+Serial.print("Phi 2 = ");
+Serial.println(Phi2);
+Serial.print("Theta = ");
+Serial.println(Theta);  
+Serial.print("X = ");
+Serial.println(X);  
+Serial.print("Y = ");
+Serial.println(Y);  
+
+  
+
+}
+
+
+
+
+
+
+
+
+
+
+void Inverse() {
+  Serial.println("Enter The value of X :");
+while(Serial.available()==0){
+  }
+X = Serial.parseInt();
+Serial.println("Enter The value of Y :");
+while(Serial.available()==0){
+  }
+Y = Serial.parseInt();
+  
+Serial.println("Enter The value of Theta :");
+while(Serial.available()==0){
+  }
+Theta = Serial.parseInt();
+  
+//float XX = pow(X,2); 
+//float YY = pow(Y,2);
+//float LL1 = pow(L1,2);\\float LL2 = pow(L2,2);
+  
+
+Phi1 = acos(((X*X) + (Y*Y) - (L1*L1) - (L2*L2)) / (2 * L1 * L2));
+
+//converting Phi1 from Radians to Degree
+float Phi11 = Phi1 * 57296 / 1000; 
+
+Phi2 = Theta - Phi11 ;  
+
+  
+M1.write(Phi11) ;
+M2.write(Phi2) ;
+  
+Serial.print("Phi 1 = ");
+Serial.println(Phi11);  
+Serial.print("Phi 2 = ");
+Serial.println(Phi2);
+Serial.print("Theta = ");
+Serial.println(Theta);  
+Serial.print("X = ");
+Serial.println(X);  
+Serial.print("Y = ");
+Serial.println(Y);  
+
+  
+
+}
