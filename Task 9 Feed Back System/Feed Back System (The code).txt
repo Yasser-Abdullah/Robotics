@@ -1,0 +1,16 @@
+#include <Servo.h>
+int x = 0;
+int y = 0;
+Servo M1;
+Servo M2;
+void setup(){
+M1.attach(7);
+ }
+void loop(){
+
+x=analogRead(A0) ;
+y=map(x,0,1023,0,180);
+M1.write(y) ;
+  
+  
+  }
